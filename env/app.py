@@ -24,7 +24,7 @@ def index():
 
 @app.route('/mapa',methods=['POST','GET'])
 def localization():
-    start_coords = (41.1579438,-8.6291053)
+    start_coords = (41.1579448,-8.6291053)
     mapa = folium.Map(location=start_coords, zoom_start=9)
     folium.Marker(
         location=[getLatitude(),getLongitude()],

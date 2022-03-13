@@ -3,7 +3,7 @@ from flask import Flask, redirect, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import folium
-
+import json
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
@@ -17,6 +17,9 @@ def getLongitude():
 def getLatitude():
     latitude=41.1706859839
     return latitude
+
+
+    
 
 @app.route('/',methods=['POST','GET'])
 def index():
@@ -32,6 +35,8 @@ def localization():
         icon=folium.Icon(color="red", icon="info-sign"),
         ).add_to(mapa)
     return mapa._repr_html_()
+
+
         
 if __name__=="__main__":
     app.run(debug=True)

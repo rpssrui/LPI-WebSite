@@ -6,8 +6,8 @@ def on_connect(client, userdata, flags, rc):
     client.subscribe('v3/+/devices/+/up')
     
 def on_message(client, userdata, msg):
-    ergebnis = json.loads(msg.payload)
-    values = ergebnis['uplink_message']
+    mensagem = json.loads(msg.payload)
+    values = mensagem['uplink_message']
     print(values['decoded_payload'])
     
 

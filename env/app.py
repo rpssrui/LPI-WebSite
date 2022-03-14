@@ -1,17 +1,23 @@
+from sqlite3 import connect
 from xml.sax import make_parser
 from flask import Flask, redirect, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import folium
+from mqtt_connect import values
+
 import json
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 db=SQLAlchemy(app)
-   
+
+
+
 #funcoes aux
 def getLongitude():
     longitude=-8.60680757276
+    print
     return longitude
 
 def getLatitude():
@@ -19,7 +25,6 @@ def getLatitude():
     return latitude
 
 
-    
 
 @app.route('/',methods=['POST','GET'])
 def index():

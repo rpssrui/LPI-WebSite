@@ -38,7 +38,7 @@ def on_message(client, userdata, msg):
 class Utilizadores(db.Model):
     __tablename__ = 'utilizadores'
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(256), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     admin = db.Column(db.Boolean) 
       
@@ -54,7 +54,7 @@ class Utilizadores(db.Model):
 class Veiculos(db.Model):
     __tablename__ = 'veiculos'
     id = db.Column(db.Integer, primary_key=True)
-    matricula = db.Column(db.String(200), unique=True, nullable=False)
+    matricula = db.Column(db.String(256), unique=True, nullable=False)
     utilizador_id= db.Column(db.Integer,db.ForeignKey('utilizadores.id'))
     
     def to_json(self):
@@ -69,7 +69,8 @@ class Coordenadas(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
-    veiculo_id= db.Column(db.Integer,db.ForeignKey('veiculos.id'))
+    veiculo_id = db.Column(db.Integer,db.ForeignKey('veiculos.id'))
+    device_id = db.Column(db.String(256), nullable=True)
     
     def to_json(self):
         return {
@@ -77,7 +78,9 @@ class Coordenadas(db.Model):
             "latitude": self.latitude,
             "longitude": self.longitude,
             "veiculo_id": self.veiculo_id,
+            "device_id": self.device_id
         }
+
 #db.drop_all()
 db.create_all()
     

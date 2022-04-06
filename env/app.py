@@ -1,5 +1,6 @@
 from ctypes import get_last_error
 from subprocess import REALTIME_PRIORITY_CLASS
+from webbrowser import get
 from flask import Flask, redirect, render_template, url_for, request, redirect, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -12,6 +13,7 @@ import paho.mqtt.client as mqtt
 import json
 from flask_cors import CORS
 from sqlalchemy import desc
+
 
 
 app=Flask(__name__)
@@ -31,7 +33,7 @@ def on_message(client, userdata, msg):
     decoded_payload=uplink['decoded_payload']
     coordenadas=decoded_payload['str']
     print("coordenadas: "+coordenadas)
-    adicionar_coordenadas(1,coordenadas)
+    adicionar_coordenadas(coordenadas)
      
 
 #tabelaUtilizadores
@@ -56,12 +58,14 @@ class Veiculos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     matricula = db.Column(db.String(256), unique=True, nullable=False)
     utilizador_id= db.Column(db.Integer,db.ForeignKey('utilizadores.id'))
+    device_id = db.Column(db.String(256), nullable=True)
     
     def to_json(self):
         return {
             "id": self.id,
             "matricula": self.matricula,
             "utilizador_id": self.utilizador_id,
+            "device_id": self.device_id
         }
 
 class Coordenadas(db.Model):
@@ -70,15 +74,14 @@ class Coordenadas(db.Model):
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
     veiculo_id = db.Column(db.Integer,db.ForeignKey('veiculos.id'))
-    device_id = db.Column(db.String(256), nullable=True)
+    
     
     def to_json(self):
         return {
             "id": self.id,
             "latitude": self.latitude,
             "longitude": self.longitude,
-            "veiculo_id": self.veiculo_id,
-            "device_id": self.device_id
+            "veiculo_id": self.veiculo_id,   
         }
 
 #db.drop_all()
@@ -143,7 +146,7 @@ def adicionar_veiculo(utilizador_id):
     if(Veiculos.query.filter_by(matricula=body["matricula"]).first()):
         return gerar_resposta(400, "veiculos", {}, "Este veiculo já se encontra registado")
     try:
-        Veiculo = Veiculos(matricula=body["matricula"],utilizador_id=utilizador_id)
+        Veiculo = Veiculos(matricula=body["matricula"],device_id=body["device_id"],utilizador_id=utilizador_id)
         db.session.add(Veiculo)
         db.session.commit()
         return gerar_resposta(200, "veiculos", Veiculo.to_json(), "Criado com sucesso")
@@ -201,8 +204,8 @@ def edita_veiculos(id):
     try:
         if ('matricula' in body):
             veiculo.matricula = body['matricula']
-        if ('lopy' in body):
-            veiculo.lopy = body['lopy']
+        if ('device_id' in body):
+            veiculo.device_id= body['device_id']
         db.session.add(veiculo)
         db.session.commit()
         return gerar_resposta(200, "veiculos", veiculo.to_json(), "Veiculo atualizado com sucesso")
@@ -219,9 +222,11 @@ def get_veiculos(utilizador_id):
     return gerar_resposta(200, "veiculos", veiculo_json)
 
 #ADD COORDENADAS DB
-def adicionar_coordenadas(veiculo_id,data):#, receber coordenadas):
+def adicionar_coordenadas(data):#, receber coordenadas):
     aux=data.split(',')
-    coordenadas = Coordenadas(latitude=aux[0],longitude=aux[1],veiculo_id=veiculo_id)
+    device_id=aux[2]
+    veiculo=Veiculos.query.filter_by(device_id=device_id).first()
+    coordenadas = Coordenadas(latitude=aux[0],longitude=aux[1],veiculo_id=veiculo.id)
     db.session.add(coordenadas)
     db.session.commit()
 
@@ -231,11 +236,22 @@ def get_last_coordenadas(veiculo_id):
     return coordenadas
 
 
+#getVeiculosbyUserID
+def getVeiculosbyUserID(utilizador_id):
+    veiculos = Veiculos.query.filter_by(utilizador_id=utilizador_id).all()
+    return veiculos
+
 #GENERETE MAPA ROUTE
 @app.route('/mapa',methods=['POST','GET'])
 def localization():
-    coordenadas=get_last_coordenadas(1)
-    return gerar_resposta(200,"coordenadas",coordenadas.to_json())
+    userid=1 #TEMOS QUE IR BUSCAR O ID AO USER AUTENTICADO PERGUNTAR O GANDRA CRIS
+    veiculos=getVeiculosbyUserID(userid)
+
+    array=[]
+    for i in veiculos:
+        array.append(get_last_coordenadas(i.id).to_json())
+
+    return gerar_resposta(200,"coordenadas",array)
 
 
         

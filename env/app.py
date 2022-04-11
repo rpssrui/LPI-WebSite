@@ -18,7 +18,7 @@ app.config['SECRET_KEY']='thisisasecretkey'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db=SQLAlchemy(app)
 CORS(app)
-
+#sadads
 def on_connect(client, userdata, flags, rc):
     print('Connected with result code '+str(rc))
     client.subscribe('v3/+/devices/+/up')

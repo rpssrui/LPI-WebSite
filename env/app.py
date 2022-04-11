@@ -4,11 +4,7 @@ from webbrowser import get
 from flask import Flask, redirect, render_template, url_for, request, redirect, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
 from time import gmtime,strftime
-import folium
-from multiprocessing import Process,Pipe
-import json
 import paho.mqtt.client as mqtt
 import json
 from flask_cors import CORS

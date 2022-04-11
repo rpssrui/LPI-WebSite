@@ -83,7 +83,7 @@ class Coordenadas(db.Model):
 #db.drop_all()
 db.create_all()
     
-#funcoes aux
+#funcoes auxx
 def getLongitude():
     longitude=-8.60680757276
     return longitude

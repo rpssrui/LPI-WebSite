@@ -115,7 +115,7 @@ def utilizadores_login():
     else:
         return gerar_resposta(400, "login", {}, "User Not Found")
 
-#REGISTER ROUTE
+#REGISTER ROUTEe
 @app.route("/registo", methods=["POST"])
 def cria_utilizador():
     body = request.get_json()

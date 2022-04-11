@@ -32,7 +32,7 @@ def on_message(client, userdata, msg):
     adicionar_coordenadas(coordenadas)
      
 
-#tabelaUtilizadores
+#tabelaUtilizadoresss
 class Utilizadores(db.Model):
     __tablename__ = 'utilizadores'
     id = db.Column(db.Integer, primary_key=True)

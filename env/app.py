@@ -255,5 +255,6 @@ client.username_pw_set('teste-lpi@ttn',password='NNSXS.CC4YFOCSK6RASFCASXQBNEXKO
 client.connect('eu1.cloud.thethings.network', 8883, 60)  
 client.loop_start()
 
+
 if __name__=="__main__":
     app.run(debug=True)

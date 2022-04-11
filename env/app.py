@@ -235,7 +235,7 @@ def getVeiculosbyUserID(utilizador_id):
 #GENERETE MAPA ROUTE
 @app.route('/mapa',methods=['POST','GET'])
 def localization():
-    userid=1 #TEMOS QUE IR BUSCAR O ID AO USER AUTENTICADO PERGUNTAR O GANDRA CRIS
+    userid=1 #TEMOS QUE IR BUSCAR O ID AO USER AUTENTICADO
     veiculos=getVeiculosbyUserID(userid)
 
     array=[]

@@ -101,7 +101,10 @@ def gerar_resposta(status, nome_do_conteudo, conteudo, mensagem=False):
 
     return Response(json.dumps(body), status=status, mimetype="application/json")    
     
-    
+
+@app.route("/",methods=["GET"])
+def index():
+    return gerar_resposta(200, "","")
 #LOGIN ROUTE        
 @app.route("/login", methods=["POST"])
 def utilizadores_login():

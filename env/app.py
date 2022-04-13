@@ -1,6 +1,3 @@
-from ctypes import get_last_error
-from subprocess import REALTIME_PRIORITY_CLASS
-from webbrowser import get
 from flask import Flask, redirect, render_template, url_for, request, redirect, Response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -260,4 +257,4 @@ client.loop_start()
 
 
 if __name__=="__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0')

@@ -8,7 +8,7 @@ function DataMapa(){
     const [coordenadas,setCoordenadas]=useState([])
 
     setInterval(() => {
-        axios.get('http://127.0.0.1:5000/mapa')
+        axios.get('http://192.168.1.67:5000/mapa')
         .then(res=>{
             console.log(res)
             setCoordenadas(res.data.coordenadas)

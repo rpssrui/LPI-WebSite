@@ -1,10 +1,11 @@
-from flask import Flask, redirect, render_template, url_for, request, redirect, Response
+import re
+from flask import Flask, redirect, render_template, url_for, request, redirect, Response, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from time import gmtime,strftime
 import paho.mqtt.client as mqtt
 import json
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from sqlalchemy import desc
 
 
@@ -15,6 +16,7 @@ app.config['SECRET_KEY']='thisisasecretkey'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db=SQLAlchemy(app)
 CORS(app)
+
 #sadads
 def on_connect(client, userdata, flags, rc):
     print('Connected with result code '+str(rc))
@@ -104,6 +106,7 @@ def index():
     return gerar_resposta(200, "","")
 #LOGIN ROUTE        
 @app.route("/login", methods=["POST"])
+@cross_origin()
 def utilizadores_login():
     body = request.get_json() #data=conteudo do form
     utilizador_objeto = Utilizadores.query.filter_by(email=body['email']).first()
@@ -117,9 +120,10 @@ def utilizadores_login():
 
 #REGISTER ROUTE
 @app.route("/registo", methods=["POST"])
+@cross_origin()
 def cria_utilizador():
     body = request.get_json()
-    if(Utilizadores.query.filter_by(email=body["email"]).first()):
+    if(Utilizadores.query.filter_by(email=body['email']).first()):
         return gerar_resposta(400, "utilizadores", {}, "Já existe um utilizador registado com este email")
     try:
         utilizador = Utilizadores(email=body["email"],password_hash=body["password"])

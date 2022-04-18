@@ -55,7 +55,7 @@ export const Register = () => {
                 withCredentials: false
             }
             );
-            console.log(response.data);
+            console.log(response.data); 
             setSuccess(true);
         }catch (err) {
         }

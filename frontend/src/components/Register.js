@@ -12,7 +12,6 @@ export const Register = () => {
     const userRef = useRef();
     const errRef = useRef();
 
-
     const [email, setEmail] = useState(''); //email input
     const [validEmail, setValidEmail] = useState(false); //boolean (valida ou nao)
     const [userFocus, setUserFocus] = useState(false); //boolean (existe focus no input ou nao)
@@ -48,7 +47,7 @@ export const Register = () => {
     const handleSubmit = async (e) => {
 
         try{
-            const response = await axios.post('http://192.168.1.67:5000/registo',
+            const response = await axios.post('http://127.0.0.1:5000/registo',
             JSON.stringify({email:email,password:pwd}),
             {
                 headers: {'Content-Type':'application/json'},
@@ -58,6 +57,7 @@ export const Register = () => {
             console.log(response.data); 
             setSuccess(true);
         }catch (err) {
+            
         }
     }
 

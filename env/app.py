@@ -116,7 +116,7 @@ def utilizadores_login():
             return gerar_resposta(200, "login", utilizador_json)
         return gerar_resposta(400, "login", {}, "Wrong Credentials")
     else:
-        return gerar_resposta(400, "login", {}, "User Not Found")
+        return gerar_resposta(401, "login", {}, "User Not Found")
 
 #REGISTER ROUTE
 @app.route("/registo", methods=["POST"])
@@ -261,4 +261,4 @@ client.loop_start()
 
 
 if __name__=="__main__":
-    app.run(host='0.0.0.0')
+    app.run(debug=True)

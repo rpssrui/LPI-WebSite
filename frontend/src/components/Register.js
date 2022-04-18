@@ -46,7 +46,7 @@ export const Register = () => {
     }, [email, pwd, matchPwd])
 
     const handleSubmit = async (e) => {
-        console.log("respons  dsadasata");
+
         try{
             const response = await axios.post('http://192.168.1.67:5000/registo',
             JSON.stringify({email:email,password:pwd}),

@@ -1,8 +1,8 @@
 import React from 'react';
 import { useRef, useState, useEffect, useContext } from 'react';
 //import AuthContext from "./context/AuthProvider";
-
 import axios from 'axios';
+
 const LOGIN_URL = 'http://127.0.0.1:5000/login';
 const status=0;
 
@@ -15,7 +15,7 @@ const Login = () => {
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
-//
+
     useEffect(() => {
         userRef.current.focus();
     }, [])
@@ -63,18 +63,18 @@ const Login = () => {
                     <h1>You are logged in!</h1>
                     <br />
                     <p>
-                        <a href="#">Go to Home</a>
+                        <a href="/home">Página Inicial</a>
                     </p>
                 </section>
             ) : (
                 <section>
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-                    <h1>Sign In</h1>
+                    <h1>Iniciar Sessão</h1>
                     <form onSubmit={handleSubmit}>
-                        <label htmlFor="username">Username:</label>
+                        <label htmlFor="username">Email:</label>
                         <input
                             type="text"
-                            id="username"
+                            id="email"
                             ref={userRef}
                             autoComplete="off"
                             onChange={(e) => setEmail(e.target.value)}
@@ -90,13 +90,14 @@ const Login = () => {
                             value={pwd}
                             required
                         />
+                        <br />
                         <button>Sign In</button>
                     </form>
                     <p>
-                        Need an Account?<br />
+                        Ainda não tem conta?<br />
                         <span className="line">
-                            {/*put router link here*/}
-                            <a href="#">Sign Up</a>
+                            {}
+                            <a href="/register">Registe-se</a>
                         </span>
                     </p>
                 </section>
@@ -105,4 +106,4 @@ const Login = () => {
     )
 }
 
-export default Login
+export default Login;

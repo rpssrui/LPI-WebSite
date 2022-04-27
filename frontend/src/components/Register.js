@@ -2,6 +2,7 @@ import React from 'react'
 import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { Button} from 'react-bootstrap';
 import axios from 'axios';
 const EMAIL_REGEX = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -136,8 +137,8 @@ export const Register = () => {
                             <FontAwesomeIcon icon={faInfoCircle} />
                             Insira a mesma password.
                         </p>
-
-                        <button disabled={!validEmail || !validPwd || !validMatch ? true : false}>Sign Up</button>
+                        <br />
+                        <button disabled={!validEmail || !validPwd || !validMatch ? true : false}>Sign Up</button> 
                         <p>
                             <br />
                             Já se econtra registado?<br />

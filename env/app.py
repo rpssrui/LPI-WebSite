@@ -1,4 +1,3 @@
-import re
 from flask import Flask, redirect, render_template, url_for, request, redirect, Response, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -38,7 +37,14 @@ class Utilizadores(db.Model):
     email = db.Column(db.String(256), unique=True, nullable=False)
     password_hash = db.Column(db.String(128), nullable=False)
     admin = db.Column(db.Boolean) 
-      
+    
+    #gerar Hashing da password
+    def set_password(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        return check_password_hash(self.password_hash, password)
+
     def to_json(self):
         return {
             "id": self.id,
@@ -104,6 +110,8 @@ def gerar_resposta(status, nome_do_conteudo, conteudo, mensagem=False):
 @app.route("/",methods=["GET"])
 def index():
     return gerar_resposta(200, "","")
+
+
 #LOGIN ROUTE        
 @app.route("/login", methods=["POST"])
 @cross_origin()
@@ -112,7 +120,7 @@ def utilizadores_login():
     utilizador_objeto = Utilizadores.query.filter_by(email=body['email']).first()
     if utilizador_objeto:
         utilizador_json = utilizador_objeto.to_json()
-        if utilizador_json['password_hash'] == body['password']:
+        if check_password_hash(utilizador_json['password_hash'],body['password']):
             return gerar_resposta(200, "login", utilizador_json)
         return gerar_resposta(400, "login", {}, "Wrong Credentials")
     else:
@@ -126,7 +134,7 @@ def cria_utilizador():
     if(Utilizadores.query.filter_by(email=body['email']).first()):
         return gerar_resposta(400, "utilizadores", {}, "Já existe um utilizador registado com este email")
     try:
-        utilizador = Utilizadores(email=body["email"],password_hash=body["password"])
+        utilizador = Utilizadores(email=body["email"],password_hash=generate_password_hash(body["password"],method='sha256'))
         db.session.add(utilizador)
         db.session.commit()
         return gerar_resposta(200, "utilizadores", utilizador.to_json(), "Criado com sucesso")
@@ -208,6 +216,14 @@ def edita_veiculos(id):
         print('Erro', e)
         return gerar_resposta(400, "veiculos", {}, "Erro ao atualizar veiculo")
    
+   
+@app.route("/homeInfo", methods=["GET"])
+def homeInfo(utilizador_id):
+    veiculos=Veiculos.query.filter_by(utilizador_id=utilizador_id).all()
+    response=len(veiculos)
+    
+    return gerar_resposta(200, "info",{"nrveiculos" : response},"")
+    
    
 #GET VEICULOS POR USER ID 
 @app.route("/frota/<utilizador_id>", methods=["GET"])

@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 import axios from 'axios'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { Container, Nav, Navbar, NavDropdown} from 'react-bootstrap';
-
 
 function DataMapa() {
     const [coordenadas, setCoordenadas] = useState([])

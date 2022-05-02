@@ -1,18 +1,21 @@
 import React from 'react';
 import { useRef, useState, useEffect, useContext } from 'react';
-//import AuthContext from "./context/AuthProvider";
+
 import axios from 'axios';
 
 const LOGIN_URL = 'http://127.0.0.1:5000/login';
-const status=0;
+
 
 const Login = () => {
-   //const { setAuth } = useContext(AuthContext);
+  
     const userRef = useRef();
     const errRef = useRef();
 
     const [email, setEmail] = useState('');
     const [pwd, setPwd] = useState('');
+    const [id,setId]= useState('');
+    const [token,setToken]=useState('');
+
     const [errMsg, setErrMsg] = useState('');
     const [success, setSuccess] = useState(false);
 
@@ -28,7 +31,7 @@ const Login = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post('http://127.0.0.1:5000/login',
+            const response = await axios.post(LOGIN_URL,
                 JSON.stringify({ email:email,password:pwd }),
                 {
                     headers: { 'Content-Type': 'application/json' },
@@ -43,6 +46,8 @@ const Login = () => {
             console.log(response.data)
             setEmail(email);
             setPwd(pwd);
+            setToken(response.data.login.token);
+            setId(response.data.login.id);
             setSuccess(true);
         } catch (err) {
             console.log(err.response.request.status);
@@ -63,7 +68,7 @@ const Login = () => {
                     <h1>You are logged in!</h1>
                     <br />
                     <p>
-                        <a href="/home">Página Inicial</a>
+                        <a href={"/home/"+id+"?tk="+token}>Página Inicial</a>
                     </p>
                 </section>
             ) : (

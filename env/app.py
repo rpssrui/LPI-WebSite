@@ -1,4 +1,6 @@
-from flask import Flask, redirect, render_template, url_for, request, redirect, Response, make_response
+from datetime import date, datetime,timedelta
+from lib2to3.pgen2 import token
+from flask import Flask, jsonify, redirect, render_template, url_for, request, redirect, Response, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from time import gmtime,strftime
@@ -6,8 +8,8 @@ import paho.mqtt.client as mqtt
 import json
 from flask_cors import CORS, cross_origin
 from sqlalchemy import desc
-
-
+import jwt
+from functools import wraps
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///first.db'
@@ -105,7 +107,31 @@ def gerar_resposta(status, nome_do_conteudo, conteudo, mensagem=False):
         body["mensagem"] = mensagem
 
     return Response(json.dumps(body), status=status, mimetype="application/json")    
-    
+
+def token_required(f):
+
+
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = None
+        # jwt is passed in the request header
+        if 'Authorization' in request.headers:
+            token = request.headers['Authorization']
+        # return 401 if token is not passed
+        if not token:
+            return jsonify({'message': 'Token is missing !!'}), 401
+        try:
+            # decoding the payload to fetch the stored details
+            data = jwt.decode(token, app.config['SECRET_KEY'],algorithms=['HS256'])
+            current_user = Utilizadores.query.filter_by(email=data['user']).first()
+        except:
+            return jsonify({
+                'message': 'Token is invalid !!'
+            }), 403
+        # returns the current logged in users contex to the routes
+        return f(current_user, *args, **kwargs)
+
+    return decorated
 
 @app.route("/",methods=["GET"])
 def index():
@@ -121,6 +147,8 @@ def utilizadores_login():
     if utilizador_objeto:
         utilizador_json = utilizador_objeto.to_json()
         if check_password_hash(utilizador_json['password_hash'],body['password']):
+            token=jwt.encode({'user':body['email'], 'exp':datetime.utcnow()+ timedelta(minutes=30)},app.config['SECRET_KEY'])
+            utilizador_json["token"]=token
             return gerar_resposta(200, "login", utilizador_json)
         return gerar_resposta(400, "login", {}, "Wrong Credentials")
     else:
@@ -217,11 +245,11 @@ def edita_veiculos(id):
         return gerar_resposta(400, "veiculos", {}, "Erro ao atualizar veiculo")
    
    
-@app.route("/homeInfo", methods=["GET"])
-def homeInfo(utilizador_id):
+@app.route("/homeInfo/<utilizador_id>", methods=["GET"])
+@token_required
+def homeInfo(current_user,utilizador_id):
     veiculos=Veiculos.query.filter_by(utilizador_id=utilizador_id).all()
     response=len(veiculos)
-    
     return gerar_resposta(200, "info",{"nrveiculos" : response},"")
     
    

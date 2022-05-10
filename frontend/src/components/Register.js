@@ -144,7 +144,7 @@ export const Register = () => {
                             Já se econtra registado?<br />
                             <span className="line">
                                 {/*trocar por link de login*/}
-                                <a href="#">Iniciar Sessão</a>
+                                <a href="/login">Iniciar Sessão</a>
                             </span>
                         </p>
                     </form>

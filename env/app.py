@@ -1,5 +1,6 @@
 from datetime import date, datetime,timedelta
 from lib2to3.pgen2 import token
+from re import U
 from flask import Flask, jsonify, redirect, render_template, url_for, request, redirect, Response, make_response
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -77,7 +78,7 @@ class Coordenadas(db.Model):
     latitude = db.Column(db.Float, nullable=True)
     longitude = db.Column(db.Float, nullable=True)
     veiculo_id = db.Column(db.Integer,db.ForeignKey('veiculos.id'))
-    
+    created_date = db.Column(db.DateTime, default=datetime.utcnow)
     
     def to_json(self):
         return {
@@ -198,8 +199,9 @@ def remover_utilizador(id):
         return gerar_resposta(400, "utilizadores", {}, "Erro ao remover")
 
 #REMOVE VEICULO ROUTE
-@app.route("/veiculos/<id>", methods=["DELETE"])
+@app.route("/removerVeiculo/<id>", methods=["DELETE"])
 def remover_veiculos(id):
+    print(id)
     veiculo = Veiculos.query.filter_by(id=id).first()
     try:
         db.session.delete(veiculo)
@@ -222,7 +224,7 @@ def editar_utilizador(id):
             utilizador.password = body['password']
         db.session.add(utilizador)
         db.session.commit()
-        return gerar_resposta(201, "utilizadores", utilizador.to_json(), "Atualizado com sucesso")
+        return gerar_resposta(200, "utilizadores", utilizador.to_json(), "Atualizado com sucesso")
     except Exception as e:
         print('Erro', e)
         return gerar_resposta(400, "utilizadores", {}, "Erro ao atualizar")
@@ -248,15 +250,20 @@ def edita_veiculos(id):
 @app.route("/homeInfo/<utilizador_id>", methods=["GET"])
 @token_required
 def homeInfo(current_user,utilizador_id):
-    veiculos=Veiculos.query.filter_by(utilizador_id=utilizador_id).all()
+    veiculos=Veiculos.query.filter_by(utilizador_id=current_user.id).all()
     response=len(veiculos)
-    return gerar_resposta(200, "info",{"nrveiculos" : response},"")
+    for i in veiculos:
+        aux=Coordenadas.query.filter_by(veiculo_id=i.id).order_by(desc(Coordenadas.id)).first()
+        
+    
+    return gerar_resposta(200, "info",{"nrveiculos" : response, "hora":aux.created_date.strftime("%m/%d/%Y, %H:%M")},"")
     
    
 #GET VEICULOS POR USER ID 
 @app.route("/frota/<utilizador_id>", methods=["GET"])
-def get_veiculos(utilizador_id):
-    veiculo_object = Veiculos.query.filter_by(utilizador_id=utilizador_id).all()
+@token_required
+def get_veiculos(current_user,utilizador_id):
+    veiculo_object = Veiculos.query.filter_by(utilizador_id=current_user.id).all()
     veiculo_json=[veiculos.to_json() for veiculos in veiculo_object]
     return gerar_resposta(200, "veiculos", veiculo_json)
 
@@ -281,11 +288,10 @@ def getVeiculosbyUserID(utilizador_id):
     return veiculos
 
 #GENERETE MAPA ROUTE
-@app.route('/mapa',methods=['POST','GET'])
-def localization():
-    userid=1 #TEMOS QUE IR BUSCAR O ID AO USER AUTENTICADO
-    veiculos=getVeiculosbyUserID(userid)
-
+@app.route('/mapa/<utilizador_id>',methods=['GET'])
+@token_required
+def localization(current_user,utilizador_id):
+    veiculos=getVeiculosbyUserID(current_user.id)
     array=[]
     for i in veiculos:
         array.append(get_last_coordenadas(i.id).to_json())

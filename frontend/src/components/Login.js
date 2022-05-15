@@ -61,6 +61,8 @@ const Login = () => {
         }
     }
 
+    sessionStorage.setItem("token", token);
+
     return (
         <>
             {success ? (
@@ -68,7 +70,7 @@ const Login = () => {
                     <h1>You are logged in!</h1>
                     <br />
                     <p>
-                        <a href={"/home/"+id+"?tk="+token}>Página Inicial</a>
+                        <a href={"/home/"+id}>Página Inicial</a>
                     </p>
                 </section>
             ) : (

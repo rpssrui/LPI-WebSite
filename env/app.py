@@ -1,4 +1,5 @@
 from datetime import date, datetime,timedelta
+from email import message
 from lib2to3.pgen2 import token
 from re import U
 from flask import Flask, jsonify, redirect, render_template, url_for, request, redirect, Response, make_response
@@ -30,6 +31,8 @@ def on_message(client, userdata, msg):
     decoded_payload=uplink['decoded_payload']
     coordenadas=decoded_payload['str']
     print("coordenadas: "+coordenadas)
+    print(msg.topic)
+    print(client)
     adicionar_coordenadas(coordenadas)
      
 
@@ -63,13 +66,15 @@ class Veiculos(db.Model):
     matricula = db.Column(db.String(256), unique=True, nullable=False)
     utilizador_id= db.Column(db.Integer,db.ForeignKey('utilizadores.id'))
     device_id = db.Column(db.String(256), nullable=True)
+    tipo=db.Column(db.String(256), unique=False, nullable=False)
     
     def to_json(self):
         return {
             "id": self.id,
             "matricula": self.matricula,
             "utilizador_id": self.utilizador_id,
-            "device_id": self.device_id
+            "device_id": self.device_id,
+            "tipo":self.tipo
         }
 
 class Coordenadas(db.Model):
@@ -172,13 +177,14 @@ def cria_utilizador():
         return gerar_resposta(400, "utilizadores", {}, "Ocorreu um erro ao fazer o seu registo, tente novamente") #frontend testa se retornaa Uuilizadores vazio provavelmente
 
 #ADD VEICULO ROUTE
-@app.route("/addVeiculos/<utilizador_id>", methods=["POST"])
+@app.route("/addVeiculo/<utilizador_id>", methods=["POST"])
 def adicionar_veiculo(utilizador_id):
     body = request.get_json()
+    print(body)
     if(Veiculos.query.filter_by(matricula=body["matricula"]).first()):
         return gerar_resposta(400, "veiculos", {}, "Este veiculo já se encontra registado")
     try:
-        Veiculo = Veiculos(matricula=body["matricula"],device_id=body["device_id"],utilizador_id=utilizador_id)
+        Veiculo = Veiculos(matricula=body["matricula"],device_id=body["device_id"],tipo=body["tipo"],utilizador_id=utilizador_id)
         db.session.add(Veiculo)
         db.session.commit()
         return gerar_resposta(200, "veiculos", Veiculo.to_json(), "Criado com sucesso")
@@ -230,13 +236,13 @@ def editar_utilizador(id):
         return gerar_resposta(400, "utilizadores", {}, "Erro ao atualizar")
 
 #UPDATE VEICULO ROUTE
-@app.route("/veiculos/<id>", methods=["PUT"])
+@app.route("/editarVeiculo/<id>", methods=["PUT"])
 def edita_veiculos(id):
     veiculo = Veiculos.query.filter_by(id=id).first()
     body = request.get_json()
     try:
-        if ('matricula' in body):
-            veiculo.matricula = body['matricula']
+        if ('tipo' in body):
+            veiculo.tipo = body['tipo']
         if ('device_id' in body):
             veiculo.device_id= body['device_id']
         db.session.add(veiculo)
@@ -254,9 +260,12 @@ def homeInfo(current_user,utilizador_id):
     response=len(veiculos)
     for i in veiculos:
         aux=Coordenadas.query.filter_by(veiculo_id=i.id).order_by(desc(Coordenadas.id)).first()
-        
+    if(aux!=None):
+        return gerar_resposta(200, "info",{"nrveiculos" : response, "hora":aux.created_date.strftime("%m/%d/%Y, %H:%M")},"")
+    else:
+        return gerar_resposta(200, "info",{"nrveiculos" : response, "hora":"Informações indisponiveis neste momento."},"")
+
     
-    return gerar_resposta(200, "info",{"nrveiculos" : response, "hora":aux.created_date.strftime("%m/%d/%Y, %H:%M")},"")
     
    
 #GET VEICULOS POR USER ID 
@@ -294,21 +303,20 @@ def localization(current_user,utilizador_id):
     veiculos=getVeiculosbyUserID(current_user.id)
     array=[]
     for i in veiculos:
-        array.append(get_last_coordenadas(i.id).to_json())
+        if(get_last_coordenadas(i.id)!=None):
+            array.append(get_last_coordenadas(i.id).to_json())
 
     return gerar_resposta(200,"coordenadas",array)
 
 
-        
-
-client = mqtt.Client()
-client.on_connect = on_connect
-client.on_message = on_message
-client.tls_set()
-client.username_pw_set('teste-lpi@ttn',password='NNSXS.CC4YFOCSK6RASFCASXQBNEXKOHCOAWS7OPCRBEY.ROK7L35RKDO5FCUYK5COL5OWBN4Z5MTMG46JQEY6LCSHZTEUCCGA')
-client.connect('eu1.cloud.thethings.network', 8883, 60)  
-client.loop_start()
 
 
 if __name__=="__main__":
-    app.run(debug=True)
+    client = mqtt.Client("teste")
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.tls_set()
+    client.username_pw_set('teste-lpi@ttn',password='NNSXS.CC4YFOCSK6RASFCASXQBNEXKOHCOAWS7OPCRBEY.ROK7L35RKDO5FCUYK5COL5OWBN4Z5MTMG46JQEY6LCSHZTEUCCGA')
+    client.connect('eu1.cloud.thethings.network', 8883, 60)  
+    client.loop_start()
+    app.run(debug=False)

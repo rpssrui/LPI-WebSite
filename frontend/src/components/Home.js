@@ -15,8 +15,8 @@ const Home = () => {
     const [hora, setHora] = useState('');
     const [err, setErr] = useState('');
 
-    const queryParams = new URLSearchParams(window.location.search)
-    const tk = queryParams.get('tk');
+ 
+    const tk = sessionStorage.getItem("token");
     useEffect(() => {
         axios.get('http://127.0.0.1:5000/homeInfo/' + id, { headers: { "Authorization": tk } })
 
@@ -52,7 +52,7 @@ const Home = () => {
                             <Card.Footer>
                                 <div className="legend">
                                     <i></i>
-                                    <Button href={"/mapa/" + id + "/?tk=" + tk}>Abrir Mapa</Button>  <i></i>
+                                    <Button href={"/mapa/" + id}>Abrir Mapa</Button>  <i></i>
                                     <i></i>
                                     <Button href="/mapa-info">Como funciona?</Button>
                                 </div>
@@ -84,7 +84,7 @@ const Home = () => {
                                 <hr></hr>
                                 <div className="stats">
                                     <i></i>
-                                    <Button href={"/frota/" + id + "/?tk=" + tk}>Gestão</Button>
+                                    <Button href={"/frota/" + id}>Gestão</Button>
                                 </div>
                             </Card.Footer>
                         </Card>

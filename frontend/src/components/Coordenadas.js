@@ -7,17 +7,19 @@ import Header from '../components/Header';
 
 function DataMapa() {
     let { id } = useParams();
-    let navigate = useNavigate();
 
     const tk = sessionStorage.getItem("token");
     const [coordenadas, setCoordenadas] = useState([])
+    const [veiculos, setVeiculos] = useState([])
+    const [teste, setTeste] = useState([])
     const [err, setErr] = useState('');
 
     useEffect(() => {
         axios.get('http://127.0.0.1:5000/mapa/' + id, { headers: { "Authorization": tk } })
             .then(res => {
                 console.log(res)
-                setCoordenadas(res.data.coordenadas)
+                setCoordenadas(res.data.data.coordenadas)
+                setVeiculos(res.data.data.veiculos)
             })
             .catch(erro => {
                 console.log(erro)
@@ -29,7 +31,8 @@ function DataMapa() {
         axios.get('http://127.0.0.1:5000/mapa/' + id, { headers: { "Authorization": tk } })
             .then(res => {
                 console.log(res)
-                setCoordenadas(res.data.coordenadas)
+                setCoordenadas(res.data.data.coordenadas)
+                setVeiculos(res.data.data.veiculos)
             })
             .catch(erro => {
                 console.log(erro)
@@ -53,11 +56,21 @@ function DataMapa() {
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
+
                 {coordenadas.map(coordenada => (
-                    <Marker position={[coordenada.latitude, coordenada.longitude]}></Marker>
+                    <Marker position={[coordenada.latitude, coordenada.longitude]}>
+                        <Popup></Popup>
+                        ))
+                    </Marker>
                 ))}
 
             </MapContainer>
+            
+            adsasds{coordenadas.map(coordenada => (
+                console.log(veiculos.find(element => id = coordenada.veiculo_id))
+            ))
+            }
+
         </div>
     );
 

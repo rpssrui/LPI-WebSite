@@ -302,11 +302,14 @@ def getVeiculosbyUserID(utilizador_id):
 def localization(current_user,utilizador_id):
     veiculos=getVeiculosbyUserID(current_user.id)
     array=[]
+    array2=[]
     for i in veiculos:
         if(get_last_coordenadas(i.id)!=None):
             array.append(get_last_coordenadas(i.id).to_json())
+            array2.append(i.to_json())
 
-    return gerar_resposta(200,"coordenadas",array)
+    return gerar_resposta(200,"data",{"coordenadas":array,"veiculos":array2})
+
 
 
 
@@ -319,4 +322,4 @@ if __name__=="__main__":
     client.username_pw_set('teste-lpi@ttn',password='NNSXS.CC4YFOCSK6RASFCASXQBNEXKOHCOAWS7OPCRBEY.ROK7L35RKDO5FCUYK5COL5OWBN4Z5MTMG46JQEY6LCSHZTEUCCGA')
     client.connect('eu1.cloud.thethings.network', 8883, 60)  
     client.loop_start()
-    app.run(debug=False)
+    app.run(debug=True)

@@ -8,16 +8,16 @@ const Header = () => {
     
     const queryParams = new URLSearchParams(window.location.search)
     const tk = queryParams.get('tk');
-    
+    let { id } = useParams();
     return (
         <tudo>
             <Navbar bg="secondary" expand="lg">
                 <Container>
-                    <Navbar.Brand href="#home">React-Bootstrap</Navbar.Brand>
+                    <Navbar.Brand href={"/home/"+id}>React-Bootstrap</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <Nav.Link href={"/home/1?tk="+tk}>Home</Nav.Link>
+                            <Nav.Link href={"/home/"+id}>Home</Nav.Link>
                             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
                                 <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
                                 <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>

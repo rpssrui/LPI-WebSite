@@ -118,3 +118,8 @@ button {
 .line {
     display: inline-block;
 }
+
+.leaflet-div-icon {
+    background: transparent;
+    border: none;
+}  

@@ -3,6 +3,7 @@ import axios from 'axios'
 import { MapContainer, TileLayer, Marker, Popup, LayersControl } from 'react-leaflet'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { useParams, useNavigate } from 'react-router-dom';
+import { Container } from 'react-bootstrap';
 import Header from '../components/Header';
 import L from "leaflet"
 import ambulanceIcon from '../components/ambulance-icon.png'
@@ -83,29 +84,18 @@ function DataMapa() {
                 />
                 <LayersControl position="topright">
                     <LayersControl.Overlay name="Marker with popup">
-                        <Marker position={[41.1579448, -8.6291053]}>
-                            <Popup>
-                                A pretty CSS3 popup. <br /> Easily customizable.
-                            </Popup>
-                        </Marker>
+                        {coordenadas.map(coordenada => (
+
+                            <Marker position={[coordenada.latitude, coordenada.longitude]} icon={getIcon()}>
+
+                                <Popup>Matricula: {veiculos[coordenada.veiculo_id - 1].matricula} <br></br> Tipo: {veiculos[coordenada.veiculo_id - 1].tipo}</Popup>
+                                ))
+                            </Marker>
+                        ))}
                     </LayersControl.Overlay>
 
                 </LayersControl>
-                {coordenadas.map(coordenada => (
-
-                    <Marker position={[coordenada.latitude, coordenada.longitude]} icon={getIcon()}>
-
-                        <Popup>Matricula: {veiculos[coordenada.veiculo_id - 1].matricula} <br></br> Tipo: {veiculos[coordenada.veiculo_id - 1].tipo}</Popup>
-                        ))
-                    </Marker>
-                ))}
-
-
-
             </MapContainer>
-
-
-
         </div>
     );
 

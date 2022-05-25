@@ -118,8 +118,6 @@ button {
 .line {
     display: inline-block;
 }
-
-.leaflet-div-icon {
-    background: transparent;
-    border: none;
-}  
+.leaflet-control-layers-list{
+    top: 69px;
+}

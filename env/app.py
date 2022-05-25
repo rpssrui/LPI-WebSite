@@ -12,6 +12,7 @@ from flask_cors import CORS, cross_origin
 from sqlalchemy import desc
 import jwt
 from functools import wraps
+import os
 
 app=Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///first.db'
@@ -153,7 +154,7 @@ def utilizadores_login():
     if utilizador_objeto:
         utilizador_json = utilizador_objeto.to_json()
         if check_password_hash(utilizador_json['password_hash'],body['password']):
-            token=jwt.encode({'user':body['email'], 'exp':datetime.utcnow()+ timedelta(minutes=30)},app.config['SECRET_KEY'])
+            token=jwt.encode({'user':body['email'], 'exp':datetime.utcnow()+ timedelta(minutes=1440)},app.config['SECRET_KEY'])
             utilizador_json["token"]=token
             return gerar_resposta(200, "login", utilizador_json)
         return gerar_resposta(400, "login", {}, "Wrong Credentials")
@@ -307,8 +308,12 @@ def localization(current_user,utilizador_id):
         if(get_last_coordenadas(i.id)!=None):
             array.append(get_last_coordenadas(i.id).to_json())
             array2.append(i.to_json())
-
-    return gerar_resposta(200,"data",{"coordenadas":array,"veiculos":array2})
+            
+    filename = os.path.join(app.static_folder, '', 'hospitais.json')
+    with open(filename) as test_file:
+        hospitais= json.load(test_file)
+    
+    return gerar_resposta(200,"data",{"coordenadas":array,"veiculos":array2,"hospitais":hospitais})
 
 
 

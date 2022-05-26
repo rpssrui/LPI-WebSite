@@ -66,7 +66,7 @@ class Veiculos(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     matricula = db.Column(db.String(256), unique=True, nullable=False)
     utilizador_id= db.Column(db.Integer,db.ForeignKey('utilizadores.id'))
-    device_id = db.Column(db.String(256), nullable=True)
+    device_id = db.Column(db.String(256), nullable=False)
     tipo=db.Column(db.String(256), unique=False, nullable=False)
     
     def to_json(self):
@@ -224,6 +224,7 @@ def remover_veiculos(id):
 def editar_utilizador(id):
     utilizador = Utilizadores.query.filter_by(id=id).first()
     body = request.get_json()
+    print(body)
     try:
         if ('email' in body):
             utilizador.email = body['email']

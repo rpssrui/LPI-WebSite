@@ -7,7 +7,7 @@ import { useRef, useState, useEffect, useContext, useSearchParams } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-const MATRICULA_REGEX=/^(([A-Z]{2}-\d{2}-(\d{2}|[A-Z]{2}))|(\d{2}-(\d{2}-[A-Z]{2}|[A-Z]{2}-\d{2})))$/
+const MATRICULA_REGEX = /^(([A-Z]{2}-\d{2}-(\d{2}|[A-Z]{2}))|(\d{2}-(\d{2}-[A-Z]{2}|[A-Z]{2}-\d{2})))$/
 
 const Frota = () => {
     let { id } = useParams();
@@ -15,8 +15,9 @@ const Frota = () => {
     const tk = sessionStorage.getItem("token");
 
 
-   
-    
+    const [selectedOption, setSelectedOption] = useState();
+
+
 
 
     const [veiculos, setVeiculos] = useState([]);
@@ -29,7 +30,7 @@ const Frota = () => {
     const [newMatricula, setNewMatricula] = useState('');
     const [validMatricula, setValidMatricula] = useState(false);
     const [matriculaFocus, setMatriculaFocus] = useState(false);
-    
+
     const [newDevice, setNewDevice] = useState('');
     const [newTipo, setNewTipo] = useState('');
 
@@ -73,6 +74,19 @@ const Frota = () => {
         //window.location.reload(true);
     }
 
+    function editarVeiculo() {
+
+
+        axios.put('http://127.0.0.1:5000/editarVeiculo/' + selectedOption, JSON.stringify({ device_id: newDevice, tipo: newTipo }), {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: false
+        }).then((response) => {
+            console.log(response.data);
+        })
+        //window.location.reload(true);
+    }
+
+
     return (
         <div>
 
@@ -90,7 +104,6 @@ const Frota = () => {
                         <th>Matricula</th>
                         <th>Dispositivo</th>
                         <th>Tipo de Veículo</th>
-                        <th>Editar</th>
                         <th>Remover</th>
                         {veiculos.map((item =>
                             <tr>
@@ -98,7 +111,6 @@ const Frota = () => {
                                 <td>{item.matricula}</td>
                                 <td>{item.device_id}</td>
                                 <td>{item.tipo}</td>
-                                <td> <Button variant="info" active style={{ marginBottom: '3px' }} onClick={handleShow}><FontAwesomeIcon icon={faCheck} /></Button></td>
                                 <td> <Button variant="danger" active style={{ marginBottom: '3px' }} onClick={() => deleteVeiculo(item.id)} ><FontAwesomeIcon icon={faCheck} /></Button></td>
                             </tr>
                         ))}
@@ -112,10 +124,12 @@ const Frota = () => {
 
             <Card>
                 <Card.Header>
-                    <Card.Title as="h4">Adicionar um novo Veículo</Card.Title>
+                    <Card.Title as="h4">Adicionar um novo Veículo &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; Editar Veículo</Card.Title>
                     <p className="card-category"></p>
                 </Card.Header>
                 <Card.Body>
+                    <Row>
+                    <Col>
                     <Form onSubmit={addVeiculo}>
                         <label>Matricula</label>
                         <input
@@ -124,23 +138,22 @@ const Frota = () => {
                             onChange={(e) => setNewMatricula(e.target.value)}
                             style={{ width: "300px" }}
                             placeholder="Ex: 33-RJ-36">
-                                
+
 
                         </input>
-                        <p id="pwdnote" className={matriculaFocus && !validMatricula ? "instructions" : "offscreen"} style={{marginLeft:"-16px", width:"450px"}}>
+                        <p id="pwdnote" className={matriculaFocus && !validMatricula ? "instructions" : "offscreen"} style={{ marginLeft: "-16px", width: "450px" }}>
                             <FontAwesomeIcon icon={faInfoCircle} />
-                            Formato de matricula inválido.<br/>
-                            <br/>
+                            Formato de matricula inválido.<br />
+                            <br />
                         </p>
                         <label>Dispositivo</label>
                         <input
                             type="text"
                             id="device_id"
                             onChange={(e) => setNewDevice(e.target.value)}
-                            style={{ width: "300px",  }}
+                            style={{ width: "300px", }}
                             placeholder="Id do dispositivo"
-                            >
-
+                        >
                         </input>
                         <label>Tipo</label>
                         <select name="tipo" id="tipo" onChange={(e) => setNewTipo(e.target.value)} style={{ width: "300px" }}>
@@ -172,26 +185,25 @@ const Frota = () => {
                             <option value="VSAM">VSAM</option>
                             <option value="VALE">VALE</option>
                         </select>
-                        <Button type="submit" variant="outline-success" active style={{ marginTop: '20px',width:"300px" }} ><FontAwesomeIcon icon={faCheck} /></Button>
+                        <Button type="submit" variant="outline-success" active style={{ marginTop: '20px', width: "300px" }} >Adicionar <FontAwesomeIcon icon={faCheck} /></Button>
                     </Form>
-                </Card.Body>
-                <Card.Footer>
-                    <div className="legend">
-                    </div>
-                </Card.Footer>
-            </Card>
+                    </Col>
+                    <Col> <Form onSubmit={editarVeiculo}>
+                        <label>Id do Veículo</label>
+                        <select name="id_veiculo" id="id_veiculo" style={{ width: "300px" }} onChange={(e) => setSelectedOption(e.target.value)}>
+                            {veiculos.map(veiculo => (
+                                <option>{veiculo.id}</option>
 
-            <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                    <Modal.Title>Editar Veículo</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Form>
+                            ))}
+
+                        </select>
                         <label>Dispositivo</label><input
+                            style={{ width: "300px" }}
                             type="text"
+                            onChange={(e) => setNewDevice(e.target.value)}
                             id="device_id"></input>
                         <label>Tipo</label>
-                        <select name="tipo" id="tipo">
+                        <select name="tipo" id="tipo" onChange={(e) => setNewTipo(e.target.value)} style={{ width: "300px" }}>
                             <option value="ABSC">ABSC</option>
                             <option value="VDTD">VDTD</option>
                             <option value="ABTM">ABTM</option>
@@ -220,18 +232,17 @@ const Frota = () => {
                             <option value="VSAM">VSAM</option>
                             <option value="VALE">VALE</option>
                         </select>
-
+ 
+                        <Button type="submit" variant="outline-success" active style={{ marginTop: '20px', width: "300px" }} >Guardar Alterações <FontAwesomeIcon icon={faCheck} /></Button>
                     </Form>
-                </Modal.Body>
-                <Modal.Footer>
-                    <Button variant="secondary" onClick={handleClose}>
-                        Close
-                    </Button>
-                    <Button variant="primary" onClick={handleClose}>
-                        Save Changes
-                    </Button>
-                </Modal.Footer>
-            </Modal>
+                    </Col>
+                    </Row>
+                </Card.Body>
+                <Card.Footer>
+                    <div className="legend">
+                    </div>
+                </Card.Footer>
+            </Card>
 
         </div >
     )

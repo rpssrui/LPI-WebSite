@@ -2,7 +2,7 @@ import React from 'react'
 import { useRef, useState, useEffect } from "react";
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Button} from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import axios from 'axios';
 const EMAIL_REGEX = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/g
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
@@ -47,18 +47,18 @@ export const Register = () => {
 
     const handleSubmit = async (e) => {
 
-        try{
+        try {
             const response = await axios.post('http://127.0.0.1:5000/registo',
-            JSON.stringify({email:email,password:pwd}),
-            {
-                headers: {'Content-Type':'application/json'},
-                withCredentials: false
-            }
+                JSON.stringify({ email: email, password: pwd }),
+                {
+                    headers: { 'Content-Type': 'application/json' },
+                    withCredentials: false
+                }
             );
-            console.log(response.data); 
+            console.log(response.data);
             setSuccess(true);
-        }catch (err) {
-            
+        } catch (err) {
+
         }
     }
 
@@ -72,10 +72,14 @@ export const Register = () => {
                     </p>
                 </section>
             ) : (
-                <section>
+                <section style={{ width: "500px"}}>
                     <p ref={errRef} className={errMsg ? "errmsg" : "offscreen"} aria-live="assertive">{errMsg}</p>
-                    <h1>Register</h1>
-                    <form onSubmit={handleSubmit}>
+                    <h1 style={{textAlign:"center",marginLeft:"-45px"}}>Registo </h1>
+                    <form onSubmit={handleSubmit} style={{
+                        margin: "0 auto",
+                        width: "250px",
+                        marginLeft:"15px"
+                    }}>
                         <label htmlFor="email">
                             Email:
                             <FontAwesomeIcon icon={faCheck} className={validEmail ? "valid" : "hide"} /> {/*se for valid mostra ICON(icon de validacao) senao DESAPARECE */}
@@ -92,6 +96,8 @@ export const Register = () => {
                             aria-invalid={validEmail ? "false" : "true"}
                             onFocus={() => setUserFocus(true)}
                             onBlur={() => setUserFocus(false)}
+                            style={{ width: "300px", Align: "center" }}
+
                         />
                         <label htmlFor="password">
                             Password:
@@ -108,8 +114,9 @@ export const Register = () => {
                             aria-describedby="pwdnote"
                             onFocus={() => setPwdFocus(true)}
                             onBlur={() => setPwdFocus(false)}
+                            style={{ width: "300px" }}
                         />
-                        <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"}>
+                        <p id="pwdnote" className={pwdFocus && !validPwd ? "instructions" : "offscreen"} style={{marginLeft:"-16px", width:"450px"}}>
                             <FontAwesomeIcon icon={faInfoCircle} />
                             Entre 8 a 24 caracteres.<br />
                             Tem que incluir uma letra maiúscula e outra minuscula, um número e um caracter especial.<br />
@@ -117,7 +124,7 @@ export const Register = () => {
                         </p>
 
 
-                        <label htmlFor="confirm_pwd">
+                        <label htmlFor="confirm_pwd" >
                             Confirmar Password:
                             <FontAwesomeIcon icon={faCheck} className={validMatch && matchPwd ? "valid" : "hide"} />
                             <FontAwesomeIcon icon={faTimes} className={validMatch || !matchPwd ? "hide" : "invalid"} />
@@ -132,13 +139,14 @@ export const Register = () => {
                             aria-describedby="confirmnote"
                             onFocus={() => setMatchFocus(true)}
                             onBlur={() => setMatchFocus(false)}
+                            style={{ width: "300px" }}
                         />
                         <p id="confirmnote" className={matchFocus && !validMatch ? "instructions" : "offscreen"}>
                             <FontAwesomeIcon icon={faInfoCircle} />
                             Insira a mesma password.
                         </p>
                         <br />
-                        <button disabled={!validEmail || !validPwd || !validMatch ? true : false}>Sign Up</button> 
+                        <button style={{ width: "200px" }} disabled={!validEmail || !validPwd || !validMatch ? true : false}>Sign Up</button>
                         <p>
                             <br />
                             Já se econtra registado?<br />

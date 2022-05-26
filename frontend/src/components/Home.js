@@ -35,9 +35,9 @@ const Home = () => {
         <tudo>
             <Header></Header>
 
-            <Container fluid>
+            <Container  fluid>
                 <br></br>
-                <Row>
+                <Row >
                     <Col md="8">
                         <Card>
                             <Card.Header>

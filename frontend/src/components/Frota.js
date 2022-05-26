@@ -7,12 +7,17 @@ import { useRef, useState, useEffect, useContext, useSearchParams } from 'react'
 import { useParams, useNavigate } from 'react-router-dom';
 import { faCheck, faTimes, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-
+const MATRICULA_REGEX=/^(([A-Z]{2}-\d{2}-(\d{2}|[A-Z]{2}))|(\d{2}-(\d{2}-[A-Z]{2}|[A-Z]{2}-\d{2})))$/
 
 const Frota = () => {
     let { id } = useParams();
     let navigate = useNavigate();
     const tk = sessionStorage.getItem("token");
+
+
+   
+    
+
 
     const [veiculos, setVeiculos] = useState([]);
     const [loadingData, setLoadingData] = useState(true);
@@ -22,8 +27,15 @@ const Frota = () => {
     const handleShow = () => setShow(true);
 
     const [newMatricula, setNewMatricula] = useState('');
+    const [validMatricula, setValidMatricula] = useState(false);
+    const [matriculaFocus, setMatriculaFocus] = useState(false);
+    
     const [newDevice, setNewDevice] = useState('');
     const [newTipo, setNewTipo] = useState('');
+
+    useEffect(() => {
+        setValidMatricula(MATRICULA_REGEX.test(newMatricula));
+    }, [newMatricula])
 
     useEffect(() => {
         async function getData() {
@@ -109,18 +121,29 @@ const Frota = () => {
                         <input
                             type="text"
                             id="matricula"
-                            onChange={(e) => setNewMatricula(e.target.value)}>
+                            onChange={(e) => setNewMatricula(e.target.value)}
+                            style={{ width: "300px" }}
+                            placeholder="Ex: 33-RJ-36">
+                                
 
                         </input>
+                        <p id="pwdnote" className={matriculaFocus && !validMatricula ? "instructions" : "offscreen"} style={{marginLeft:"-16px", width:"450px"}}>
+                            <FontAwesomeIcon icon={faInfoCircle} />
+                            Formato de matricula inválido.<br/>
+                            <br/>
+                        </p>
                         <label>Dispositivo</label>
                         <input
                             type="text"
                             id="device_id"
-                            onChange={(e) => setNewDevice(e.target.value)}>
+                            onChange={(e) => setNewDevice(e.target.value)}
+                            style={{ width: "300px",  }}
+                            placeholder="Id do dispositivo"
+                            >
 
                         </input>
                         <label>Tipo</label>
-                        <select name="tipo" id="tipo" onChange={(e) => setNewTipo(e.target.value)}>
+                        <select name="tipo" id="tipo" onChange={(e) => setNewTipo(e.target.value)} style={{ width: "300px" }}>
                             <option value="ABSC">ABSC</option>
                             <option value="VDTD">VDTD</option>
                             <option value="ABTM">ABTM</option>
@@ -149,7 +172,7 @@ const Frota = () => {
                             <option value="VSAM">VSAM</option>
                             <option value="VALE">VALE</option>
                         </select>
-                        <Button type="submit" variant="outline-success" active style={{ marginTop: '20px' }} ><FontAwesomeIcon icon={faCheck} /></Button>
+                        <Button type="submit" variant="outline-success" active style={{ marginTop: '20px',width:"300px" }} ><FontAwesomeIcon icon={faCheck} /></Button>
                     </Form>
                 </Card.Body>
                 <Card.Footer>

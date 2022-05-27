@@ -111,7 +111,7 @@ const Frota = () => {
                                 <td>{item.matricula}</td>
                                 <td>{item.device_id}</td>
                                 <td>{item.tipo}</td>
-                                <td> <Button variant="danger" active style={{ marginBottom: '3px' }} onClick={() => deleteVeiculo(item.id)} ><FontAwesomeIcon icon={faCheck} /></Button></td>
+                                <td> <Button variant="danger" active style={{ marginBottom: '3px' }} onClick={() => deleteVeiculo(item.id)} > Remover</Button></td>
                             </tr>
                         ))}
                     </table>
@@ -157,6 +157,7 @@ const Frota = () => {
                         </input>
                         <label>Tipo</label>
                         <select name="tipo" id="tipo" onChange={(e) => setNewTipo(e.target.value)} style={{ width: "300px" }}>
+                            <option value="">Escolher Veiculo</option>
                             <option value="ABSC">ABSC</option>
                             <option value="VDTD">VDTD</option>
                             <option value="ABTM">ABTM</option>
@@ -185,7 +186,7 @@ const Frota = () => {
                             <option value="VSAM">VSAM</option>
                             <option value="VALE">VALE</option>
                         </select>
-                        <Button type="submit" variant="outline-success" active style={{ marginTop: '20px', width: "300px" }} >Adicionar <FontAwesomeIcon icon={faCheck} /></Button>
+                        <Button type="submit" variant="outline-success" active style={{ marginTop: '20px', width: "300px" }} >Adicionar </Button>
                     </Form>
                     </Col>
                     <Col> <Form onSubmit={editarVeiculo}>
@@ -233,7 +234,7 @@ const Frota = () => {
                             <option value="VALE">VALE</option>
                         </select>
  
-                        <Button type="submit" variant="outline-success" active style={{ marginTop: '20px', width: "300px" }} >Guardar Alterações <FontAwesomeIcon icon={faCheck} /></Button>
+                        <Button type="submit" variant="outline-success" active style={{ marginTop: '20px', width: "300px" }} >Guardar Alterações </Button>
                     </Form>
                     </Col>
                     </Row>

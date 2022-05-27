@@ -95,7 +95,7 @@ class Coordenadas(db.Model):
         }
 
 #db.drop_all()
-db.create_all()
+#db.create_all()
     
 #funcoes auxx
 def getLongitude():
@@ -328,4 +328,4 @@ if __name__=="__main__":
     client.username_pw_set('teste-lpi@ttn',password='NNSXS.CC4YFOCSK6RASFCASXQBNEXKOHCOAWS7OPCRBEY.ROK7L35RKDO5FCUYK5COL5OWBN4Z5MTMG46JQEY6LCSHZTEUCCGA')
     client.connect('eu1.cloud.thethings.network', 8883, 60)  
     client.loop_start()
-    app.run(debug=True)
+    app.run(debug=False)

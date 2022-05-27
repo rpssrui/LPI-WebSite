@@ -29,19 +29,23 @@ body {
 }
 
 section {
+    margin-top: 50px;
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
     border: 5px solid #DCDCDC;
-    padding: 10px;
+    padding: 290px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     padding: 1rem;
     background-color: rgba(0, 0, 0, 0.4);
+    
 }
-
+.row-title-text.styles_row-title-text__1MuhU{
+    color:#DCDCDC;
+}
 form {
     display: flex;
     flex-direction: column;
@@ -62,7 +66,7 @@ textarea {
     font-family: 'Nunito', sans-serif;
     font-size: 22px;
     padding: 0.25rem;
-    border-radius: 0.5rem;
+    
 }
 
 label,
@@ -121,3 +125,4 @@ button {
 .leaflet-control-layers-list{
     top: 69px;
 }
+

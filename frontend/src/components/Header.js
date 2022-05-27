@@ -6,28 +6,27 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useRef, useState, useEffect, useContext, useSearchParams } from 'react';
 const Header = () => {
     const tk = sessionStorage.getItem("token");
-    const queryParams = new URLSearchParams(window.location.search)
 
     let { id } = useParams();
 
     return (
         <div>
-            <Navbar expand="lg"   style={{ backgroundColor: "#C9060C" }}>
+            <Navbar expand="lg"style={{ backgroundColor: "#C9060C", opacity:"75" }}>
                 <Container>
-                    <Navbar.Brand href={"/home/" + id}>Ambulance Tracker</Navbar.Brand>
+                    <Navbar.Brand   href={"/home/" + id}>Ambulance Tracker</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse class="navbar-collapse" id="basic-navbar-nav">
-                        <Nav className="me-auto">
+                        <Nav  className="me-auto">
                             <Nav.Link href={"/home/" + id}>Home</Nav.Link>
                             <Nav.Link href={"/frota/" + id}>Frota</Nav.Link>
                         </Nav>
                         <Nav>
                             <NavDropdown title="Dropdown" id="basic-nav-dropdown" class="dropdown-menu dropdown-menu-end">
-                                <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.2">Another action</NavDropdown.Item>
-                                <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                                <NavDropdown.Item style={{color:"black"}} href="/faqs">Faqs</NavDropdown.Item>
+                                <NavDropdown.Item style={{color:"black"}} href={"/frota/" + id}>Frota</NavDropdown.Item>
+                                <NavDropdown.Item style={{color:"black"}} href="/aboutUs">AboutUs</NavDropdown.Item>
                                 <NavDropdown.Divider />
-                                <NavDropdown.Item href="#action/3.4">Separated link</NavDropdown.Item>
+                                <NavDropdown.Item style={{color:"black"}} href="/">Logout</NavDropdown.Item>
                             </NavDropdown>
                         </Nav>
                     </Navbar.Collapse>

@@ -9,6 +9,8 @@ import L from "leaflet"
 import ambulanceIcon from '../components/ambulance-icon.png'
 import hositalIcon from '../components/hospitalIcon.png'
 
+
+
 function getIcon() {
 
     return L.icon({
@@ -45,6 +47,27 @@ function DataMapa() {
     const [err, setErr] = useState('');
     const [loadingData, setLoadingData] = useState(true);
     const [hospitais, setHospitais] = useState([]);
+
+    let navigate = useNavigate();
+
+    const [countVeiculos, setCountVeiculos] = useState('');
+    const [hora, setHora] = useState('');
+
+    
+    useEffect(() => {
+        axios.get('http://127.0.0.1:5000/homeInfo/' + id, { headers: { "Authorization": tk } })
+    
+            .then(res => {
+                console.log(res);
+                setCountVeiculos(res.data.info.nrveiculos);
+                setHora(res.data.info.hora);
+            })
+            .catch(err => {
+                console.log(err);
+                setErr(err);
+            })
+    
+    }, []);
 
     useEffect(() => {
         async function getData1() {
@@ -85,6 +108,7 @@ function DataMapa() {
 
 
 
+    
     return (
 
         <div>

@@ -8,6 +8,7 @@ import ErrorPage from './components/ErrorPage';
 import Frota from './components/Frota';
 import Help from './components/Help';
 import AboutUs from './components/AboutUs';
+import Faqs from './components/Faqs';
 import { BrowserRouter as Router, Route, Routes,useNavigate } from 'react-router-dom';
 
 
@@ -16,6 +17,7 @@ import { BrowserRouter as Router, Route, Routes,useNavigate } from 'react-router
 function App() {
 
   return (
+  
     <div>
       <Router>
         <Routes>
@@ -26,12 +28,12 @@ function App() {
           <Route path="/home/:id" element={<Home></Home>}/>
           <Route path="/errorPage" element={<ErrorPage></ErrorPage>} />
           <Route path="/frota/:id" element={<Frota></Frota>} />
-          <Route path="/faqs" element={<Help></Help>} />
+          <Route path="/faqs" element={<Faqs></Faqs>} />
           <Route path="/aboutUs" element={<AboutUs></AboutUs>} />
         </Routes>
       </Router>
     </div>
-  );
+  );  
 
 }
 

@@ -7,16 +7,16 @@ import { useRef, useState, useEffect, useContext, useSearchParams } from 'react'
 const Header = () => {
     const tk = sessionStorage.getItem("token");
     const queryParams = new URLSearchParams(window.location.search)
-   
+
     let { id } = useParams();
-    
+
     return (
-        <tudo>
-            <Navbar bg="secondary" expand="lg">
+        <div>
+            <Navbar expand="lg"   style={{ backgroundColor: "#C9060C" }}>
                 <Container>
                     <Navbar.Brand href={"/home/" + id}>Ambulance Tracker</Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
+                    <Navbar.Collapse class="navbar-collapse" id="basic-navbar-nav">
                         <Nav className="me-auto">
                             <Nav.Link href={"/home/" + id}>Home</Nav.Link>
                             <Nav.Link href={"/frota/" + id}>Frota</Nav.Link>
@@ -33,7 +33,7 @@ const Header = () => {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-        </tudo >
+        </div >
     );
 }
 

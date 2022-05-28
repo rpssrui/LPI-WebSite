@@ -12,27 +12,21 @@ const data = {
     
     rows: [
         {
-            title: "Lorem ipsum dolor sit amet,",
-            content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. In sed tempor sem. Aenean vel turpis feugiat,
-              ultricies metus at, consequat velit. Curabitur est nibh, varius in tellus nec, mattis pulvinar metus.
-              In maximus cursus lorem, nec laoreet velit eleifend vel. Ut aliquet mauris tortor, sed egestas libero interdum vitae.
-              Fusce sed commodo purus, at tempus turpis.`,
+            title: "Como adicionar um novo veículo?",
+            content:"Dirija-se até à area de gestão da frota. Preencha os campos com as informações corretas. Nota:O id do dispositivo será proporcionado pela nossa equipa, sendo esta a peça fulcral para identificar-mos o seu veículo.",
         },
         {
-            title: "Nunc maximus, magna at ultricies elementum",
+            title: "Como editar/eliminar um veículo?",
             content:
-                "Nunc maximus, magna at ultricies elementum, risus turpis vulputate quam, vitae convallis ex tortor sed dolor.",
+                "Na área de gestão de frota encontrará ambas as opções, quanto à edição apenas será necessária em caso de substituição de dispositos.",
         },
         {
-            title: "Curabitur laoreet, mauris vel blandit fringilla",
-            content: `Curabitur laoreet, mauris vel blandit fringilla, leo elit rhoncus nunc, ac sagittis leo elit vel lorem.
-            Fusce tempor lacus ut libero posuere viverra. Nunc velit dolor, tincidunt at varius vel, laoreet vel quam.
-            Sed dolor urna, lobortis in arcu auctor, tincidunt mattis ante. Vivamus venenatis ultricies nibh in volutpat.
-            Cras eu metus quis leo vestibulum feugiat nec sagittis lacus.Mauris vulputate arcu sed massa euismod dignissim. `,
+            title: "Como criar um marcador personalizado?",
+            content: "Com o mapa aberto clique em cima do local que tenciona guardar como marcador personalizado. Vão ser apresentadas as coordenadas(Longitude e Latitude desse local). A seguir apenas tem que copiar e colar estes dados para os campos de inserseção dos mesmos. Tem ainda a opção de adicionar um nome ao marcador.",
         },
         {
-            title: "What is the package version",
-            content: <p>current version is 1.2.1</p>,
+            title: "Como ativar/desativar marcadores?",
+            content: "No canto superior esquerdo do seu mapa encontrará um menu com um botão para cada categoria de marcadores (i.e. Veículos, Hospitais ou marcadores personalizados), aí pode ativar ou esconder cada uma destas categorias.",
         },
     ],
 };

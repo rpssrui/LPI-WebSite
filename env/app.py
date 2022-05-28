@@ -94,8 +94,26 @@ class Coordenadas(db.Model):
             "veiculo_id": self.veiculo_id,   
         }
 
+class CustomMarkers(db.Model):
+    __tablename__ = 'CustomMarkers'
+    id = db.Column(db.Integer, primary_key=True)
+    latitude = db.Column(db.Float, nullable=True)
+    longitude = db.Column(db.Float, nullable=True)
+    utilizador_id= db.Column(db.Integer,db.ForeignKey('utilizadores.id'))
+    name = db.Column(db.String(256),nullable=False)
+    created_date = db.Column(db.DateTime, default=datetime.utcnow)
+    
+    def to_json(self):
+        return {
+            "id": self.id,
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "utilizador_id": self.utilizador_id,
+            "name": self.name,   
+        }
+
 #db.drop_all()
-#db.create_all()
+db.create_all()
     
 #funcoes auxx
 def getLongitude():
@@ -314,11 +332,27 @@ def localization(current_user,utilizador_id):
     with open(filename) as test_file:
         hospitais= json.load(test_file)
     
+    markers_object = CustomMarkers.query.filter_by(utilizador_id=current_user.id).all()
+    markers_json=[markers.to_json() for markers in markers_object]
+    if(markers_json):
+        return gerar_resposta(200,"data",{"coordenadas":array,"veiculos":array2,"hospitais":hospitais, "customMarkers":markers_json})
     return gerar_resposta(200,"data",{"coordenadas":array,"veiculos":array2,"hospitais":hospitais})
 
 
 
-
+@app.route('/addCustomMarker/<utilizador_id>',methods=['POST'])
+def addCustomMarker(utilizador_id):
+    body = request.get_json()
+    print(body)
+    if(CustomMarkers.query.filter_by(name=body["name"]).first()):
+        return gerar_resposta(400, "customMarker", {}, "Este marker já se encontra em uso.")
+    try:
+        Marker = CustomMarkers(latitude=body["latitude"],longitude=body["longitude"],utilizador_id=utilizador_id,name=body["name"])
+        db.session.add(Marker)
+        db.session.commit()
+        return gerar_resposta(200, "marker", Marker.to_json(), "Criado com sucesso")
+    except Exception as e:
+        return gerar_resposta(400, "marker", {}, "Ocorreu um erro ao registar o marcador, tente novamente")
 
 if __name__=="__main__":
     client = mqtt.Client("teste")

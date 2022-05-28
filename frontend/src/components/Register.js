@@ -146,7 +146,7 @@ export const Register = () => {
                             Insira a mesma password.
                         </p>
                         <br />
-                        <button style={{ width: "200px" }} disabled={!validEmail || !validPwd || !validMatch ? true : false}>Sign Up</button>
+                        <button style={{ width: "200px" }} disabled={!validEmail || !validPwd || !validMatch ? true : false}>Validar</button>
                         <p>
                             <br />
                             Já se econtra registado?<br />

@@ -103,7 +103,7 @@ const Login = () => {
                             style={{ width: "300px" }}
                         />
                         <br />
-                        <button style={{ width: "200px" }}>Sign In</button>
+                        <button style={{ width: "200px" }}>Validar</button>
                     </form>
                     <p>
                         Ainda não tem conta?<br />

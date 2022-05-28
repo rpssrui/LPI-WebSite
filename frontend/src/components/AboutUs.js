@@ -154,8 +154,8 @@ function AboutUs() {
                   {tier.description}
 
                 </CardContent>
-                <CardActions>
-                  {tier.facebook}
+                <CardActions style={{marginLeft:"120px"}}>
+                  {tier.facebooK}
                   {tier.instagram}
                   {tier.linkedin}
                 </CardActions>

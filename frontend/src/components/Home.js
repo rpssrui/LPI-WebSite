@@ -9,10 +9,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import L from "leaflet"
 import ambulanceIcon from '../components/ambulance-icon.png'
 import hositalIcon from '../components/hospitalIcon.png'
-
-function addUserMarker() { 
-
-}
+import customMarkerIcon from '../components/customMarker-icon.png'
 
 function LocationMarker() {
     const [position, setPosition] = useState(null)
@@ -54,6 +51,19 @@ function getHospitalIcon() {
     });
 }
 
+function getCustomMarkerIcon() {
+
+    return L.icon({
+        iconUrl: customMarkerIcon,
+
+        iconSize: [35, 35], // size of the icon
+        shadowSize: [50, 64], // size of the shadow
+        iconAnchor: [22, 94], // point of the icon which will correspond to marker's location
+        shadowAnchor: [4, 62],  // the same for the shadow
+        popupAnchor: [-3, -76] // point from which the popup should open relative to the iconAnchor
+    });
+}
+
 const Home = () => {
 
     let { id } = useParams();
@@ -65,6 +75,7 @@ const Home = () => {
     const [err, setErr] = useState('');
     const [loadingData, setLoadingData] = useState(true);
     const [hospitais, setHospitais] = useState([]);
+    const [customMarkers, setCustomMarkers]=useState([]);
 
     let navigate = useNavigate();
 
@@ -99,6 +110,7 @@ const Home = () => {
                     setVeiculos(res.data.data.veiculos)
                     setCoordenadas(res.data.data.coordenadas)
                     setHospitais(res.data.data.hospitais)
+                    setCustomMarkers(res.data.data.customMarkers)
                     setLoadingData(false);
                 })
         }
@@ -114,6 +126,7 @@ const Home = () => {
                 console.log(res)
                 setVeiculos(res.data.data.veiculos)
                 setCoordenadas(res.data.data.coordenadas)
+                setCustomMarkers(res.data.data.customMarkers)
 
             })
             .catch(erro => {
@@ -128,20 +141,17 @@ const Home = () => {
     }, []);
 
 
-    useEffect(() => {
-        axios.get('http://127.0.0.1:5000/homeInfo/' + id, { headers: { "Authorization": tk } })
+    function addCustomMarker() {
+        console.log(userMarkerName+userMarkerLat+userMarkerLong)
+        axios.post('http://127.0.0.1:5000/addCustomMarker/' + id, JSON.stringify({ name: userMarkerName, latitude: userMarkerLat, longitude: userMarkerLong}), {
+            headers: { 'Content-Type': 'application/json' },
+            withCredentials: false
+        }).then((response) => {
+            console.log(response.data);
+        })
+        //window.location.reload(true);
 
-            .then(res => {
-                console.log(res);
-                setCountVeiculos(res.data.info.nrveiculos);
-                setHora(res.data.info.hora);
-            })
-            .catch(err => {
-                console.log(err);
-                setErr(err);
-            })
-
-    }, []);
+    }
 
 
 
@@ -175,6 +185,20 @@ const Home = () => {
                                 </FeatureGroup>
                             </LayersControl.Overlay>
 
+                            <LayersControl.Overlay name="Meus Marcadores">
+                                <FeatureGroup>
+                                    {customMarkers.map(customMarker => (
+
+
+                                        <Marker position={[customMarker.latitude, customMarker.longitude]} icon={getCustomMarkerIcon()}>
+
+                                            <Popup>{customMarker.name}</Popup>
+
+                                        </Marker>
+                                    ))}
+                                </FeatureGroup>
+                            </LayersControl.Overlay>
+
                             <LayersControl.Overlay name="Hospitais">
                                 <FeatureGroup>
                                     {hospitais.map(hospital => (
@@ -182,12 +206,14 @@ const Home = () => {
 
                                         <Marker position={[hospital.Latitude, hospital.Longitude]} icon={getHospitalIcon()}>
 
-                                            <Popup>Nome:{hospital.Nome}</Popup>
+                                            <Popup>{hospital.Nome}</Popup>
 
                                         </Marker>
                                     ))}
                                 </FeatureGroup>
                             </LayersControl.Overlay>
+
+                           
                             <LocationMarker />
 
                         </LayersControl>
@@ -236,7 +262,7 @@ const Home = () => {
                                 </Row>
                             </Card.Body>
                             <Card.Footer>
-                                <Form onSubmit={addUserMarker}>
+                                <Form onSubmit={addCustomMarker}>
                                     <label>Latitude</label>
                                     <input
                                         type="text"

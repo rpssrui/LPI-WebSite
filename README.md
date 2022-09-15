@@ -16,5 +16,11 @@
 
 03/20/2022: Conexão entre api e frontend, react recebe json com coordenadas(latitude e longitude) e já coloca um marker no mapa com as ultima entrada da tabela
 
-03/21/2022: Frontend faz fetch à data(coordenadas) de "x" em "x" tempo, atualiza o marker no mapa conforme a ultima entrada da base dados
+03/21/2022: Frontend faz fetch à data(coordenadas) periodicamente, atualiza o marker no mapa conforme a ultima entrada da base dados
 03/21/2022: Detetado um bug no handler do mqttclient, a função parece estar a ser chamada 2 vezes ao ser recebida apenas 1 mensagem levando a que sejam criada 1 entrada duplicada na base de dados
+
+03/23/2022: Corrigido o bug no handler do mqttclient.
+
+03/24/2022: Melhoria do mapa para apresentar a informação de cada veículo quando este for acedido.
+03/24/2022: Alterações de desing, novos ícones entre outros.
+03/24/2022: Alterações ao retorno de diversas rotas da API para incluirem novos dados como: timestamps, dados dos veículos, entre outros.
